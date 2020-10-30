@@ -55,34 +55,31 @@ public class PatientBss {
 	}
 	
 	 public PatientNodo addPatient(PatientNodo arbTemp, PatientNodo nNodo){
-		 if (find(nNodo.getPatient().getId())==false) {
-	        if (arbTemp == null) {
+		 if (arbTemp == null) {
 	            arbTemp = nNodo;
 	            patientsNumber++;
-	            System.out.println(nNodo.patient.name + " Paciente se agrego");
-	        }
-	        else {
-	            if (nNodo.getPatient().getId()<arbTemp.getPatient().getId()) {
-	                arbTemp.setLeft(addPatient(arbTemp.left, nNodo));
-	            }
-	            else{
-	                arbTemp.setRight(addPatient(arbTemp.right, nNodo));
-	            }
-	        }  
-	        
-	        return arbTemp;
-	    }else {
-			System.out.println("This patient is regitered already");
-			return null;
+	            System.out.println("El paciente " +nNodo.patient.name + " se agrego correctamente");
+	     }else {
+	    	 if (!(nNodo.getPatient().getId()==arbTemp.getPatient().getId())) {
+	    		 if (nNodo.getPatient().getId()<arbTemp.getPatient().getId()) {
+	    			 arbTemp.setLeft(addPatient(arbTemp.left, nNodo));
+	    		 }
+	    		 if (nNodo.getPatient().getId()>arbTemp.getPatient().getId()){
+		        	 arbTemp.setRight(addPatient(arbTemp.right, nNodo));
+		         }	    		 
+	    	 }else {
+	 			System.out.println("El paciente " + nNodo.getPatient().getName() + " ya se encuentra registrado");
+			} 
 		}
+		 return arbTemp;
 	 }
 	 
 		public boolean find(int id) {
 			return find(root, id);
 		}
 		
-		private boolean find(PatientNodo nodo, int id) {
-			if(root == null) {
+		public boolean find(PatientNodo nodo, int id) {
+			if(nodo == null) {
 				return false;	
 			}
 			if(nodo.patient.id ==id) {
@@ -92,6 +89,20 @@ public class PatientBss {
 				return find(nodo.right, id);
 			}
 			return find(nodo.left, id);
+		}
+		
+		public PatientNodo returnNodo(PatientNodo nodo, int id) {
+			if (nodo == null) {
+				return null;
+			}
+			if (nodo.getPatient().getId()==id) {
+				return nodo;
+			}else {
+				if (nodo.getPatient().getId() <id ) {
+					return returnNodo(nodo.right, id);
+				}
+				return returnNodo(nodo.left, id);
+			}
 		}
 		
 		// recorrer el arbol 
@@ -105,6 +116,23 @@ public class PatientBss {
 			    }
 			    if (root.getRight() != null){
 			        traverse (root.right);
+			    }
+			}
+		}
+		
+		//Pago Cuota
+		public void pay(PatientNodo root){ 
+			if (root == null) {
+				System.out.println("No hay pacientes en el sistema");
+			}else {
+				System.out.println("El paciente " + root.getPatient().getName() 
+						+ " tiene " + root.getPatient().getSymptoms().length 
+						+ " por lo cual debera pagar " + root.getPatient().getCuotaPagar());
+				if (root.getLeft() != null){
+			        pay(root.left);
+			    }
+			    if (root.getRight() != null){
+			        pay(root.right);
 			    }
 			}
 		}
