@@ -10,6 +10,14 @@ import javax.swing.JFileChooser;
 public class Program {
 	public static PatientBss treePatient = new PatientBss();
 	
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		JFileChooser file = new JFileChooser();	
+		file.showOpenDialog(null);
+		String nameFile = file.getSelectedFile().getPath();
+		
+		dataAsing(nameFile);		
+	}
+	
 	public static void dataAsing(String nameFile) throws IOException {
 		int numberPatients;
 		
@@ -37,7 +45,7 @@ public class Program {
 			
 			System.out.println("El numero de pacientes es: "+numberPatients);
 			
-			//Add Patients
+			//Agregar Patients
 			for (int i = 0; i < numberPatients; i++) {
 				line = br.readLine();
 				data = line.split(" ");
@@ -58,7 +66,7 @@ public class Program {
 			}
 		}catch (IOException e) {
 		}
-		tp.traverse(root);
+		//tp.traverse(root);
 		int valor = 1;
 		do {
 			System.out.println("Desea revisar los sintomas de un paciente");
@@ -83,14 +91,26 @@ public class Program {
 		
 		System.out.println("=========================================================================");
 		tp.pay(root);
-	}
-	
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		JFileChooser file = new JFileChooser();	
-		file.showOpenDialog(null);
-		String nameFile = file.getSelectedFile().getPath();
 		
-		dataAsing(nameFile);		
+		System.out.println("=========================================================================");
+		System.out.println("El número de pacientes con fiebre es: " + tp.fluCount(root));
+		
+		/*System.out.println("=========================================================================");
+		System.out.println("Arreglo conteo sintomas: " );
+		String [][] arreglo = tp.sympthomMore(root);
+		for (int i = 0; i < arreglo.length; i++) {
+			System.out.println();
+			for (int j = 0; j < arreglo.length; j++) {
+				System.out.print(arreglo[i][j]);
+			}
+		}*/
+		
+		System.out.println("=========================================================================");
+		System.out.println("En promedio los pacientes pagan: " + tp.averagePay(root));
+		
+		System.out.println("=========================================================================");
+		System.out.println("El paciente con mayor numero de sintomas es: " + tp.mostSymptoms(root).getName() 
+				+ " con " + tp.mostSymptoms(root).getSymptoms().length + " sintomas");
 	}	
 }
 

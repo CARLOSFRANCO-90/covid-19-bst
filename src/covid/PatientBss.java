@@ -7,6 +7,12 @@ public class PatientBss {
 	int totalAccount=0;
 	int patientsNumber=0;
 	int fluPatients =0;
+	int averagePay;
+	
+	//sintomas
+	String [][] sympthomXCount = new String[2][10];
+
+	private PatientNodo nodo; 
 	
 	//Constructores
 	public PatientBss(PatientNodo root, int totalAccount, int patientsNumber, int fluPatients) {
@@ -137,8 +143,105 @@ public class PatientBss {
 			}
 		}
 		
+		//Pacientes fiebre, metodo 
+		public int fluCount(PatientNodo root){ 
+			if (root == null) {
+				System.out.println("No hay pacientes en el sistema");
+			}else {
+				for (int i = 0; i < root.patient.symptoms.length; i++) {
+					if (root.patient.symptoms[i].compareTo("fiebre")==0) {
+						fluPatients++;
+					}
+				}
+				if (root.getLeft() != null){
+					fluCount(root.left);
+				}
+				if (root.getRight() != null){
+					fluCount(root.right);
+				}
+			}
+			return fluPatients;
+		}
+		
+		//Sintoma más común no me funciona 
+		public String[][] sympthomMore(PatientNodo root){ 
+			int i;
+			int j;
+			int t;
+			if (root == null) {
+				System.out.println("No hay pacientes en el sistema");
+			}else {
+				for (i = 0; i < root.patient.symptoms.length; i++) {
+					j=0;
+					t=1;
+					int b=0;
+					while (t!=0) {
+						t = root.patient.symptoms[i].compareTo(sympthomXCount[0][j]);
+						if(t==0) {
+							int a = Integer.parseInt(sympthomXCount[1][j]);
+							sympthomXCount[1][j] = Integer.toString(a++);
+							b++;
+						}
+						j++;
+					}
+					if (b!=0) {
+						sympthomXCount[0][sympthomXCount.length] = root.patient.symptoms[i];
+						sympthomXCount[1][sympthomXCount.length] = Integer.toString(1);
+					}
+				}
+				
+				if (root.getLeft() != null){
+					sympthomMore(root.left);
+			    }
+			    if (root.getRight() != null){
+			    	sympthomMore(root.right);
+			    }
+			}
+			return sympthomXCount;
+		}
+		
+		//Promedio de pago
+		public int averagePay (PatientNodo root) {
+			return averagePay =sumPay(root)/patientsNumber;
+		}
+		private int sumPay(PatientNodo root){ 
+			if (root == null) {
+				System.out.println("No hay pacientes en el sistema");
+			}else {
+				totalAccount = totalAccount + root.patient.cuotaPagar;
+				if (root.getLeft() != null){
+					sumPay(root.left);
+				}
+				if (root.getRight() != null){
+					sumPay(root.right);
+				}
+			}
+			return totalAccount;
+		}
+		
 
 		// Mayor sintomas
+		/*public PatientNodo mostSymptoms(PatientNodo root) {
+			nodo = root;
+			return mostSymptoms(root, nodo);
+		}*/
+		/*private PatientNodo mostSymptoms(PatientNodo root, PatientNodo nodo){ 
+			if (root == null) {
+				System.out.println("No hay pacientes en el sistema");
+			}else {
+				if (nodo.patient.symptoms.length<=root.patient.symptoms.length) {
+					nodo = root;
+				}
+				if (root.getLeft() != null){
+			        mostSymptoms(root.left, nodo);
+			    }
+			    if (root.getRight() != null){
+			        mostSymptoms(root.right, nodo);
+			    }
+			}
+			return nodo;
+		}*/
+		
 		public Patient mostSymptoms(PatientNodo nodo) {
 			if(nodo == null) {
 				return null;
@@ -156,12 +259,12 @@ public class PatientBss {
 			
 			Patient theBiggesOne = nodo.patient;
 			if(mostSymptomsPatienleft != null) {
-				if(theBiggesOne.symptoms.length <= mostSymptomsPatienleft.symptoms.length) {
+				if(theBiggesOne.symptoms.length < mostSymptomsPatienleft.symptoms.length) {
 					theBiggesOne = mostSymptomsPatienleft;
 				}
 			}
 			if(mostSymptomsPatienRight !=null) {
-				if(mostSymptomsPatienRight.symptoms.length <= theBiggesOne.symptoms.length){
+				if(mostSymptomsPatienRight.symptoms.length > theBiggesOne.symptoms.length){
 					theBiggesOne = mostSymptomsPatienRight;
 				}
 			}
